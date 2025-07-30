@@ -8,3 +8,7 @@ data/original/*
 
 cache/*.txt
 data/*.txt
+
+# Allow placeholder files to keep folders in repo
+!data/original/.gitkeep
+!data/alternative/.gitkeep

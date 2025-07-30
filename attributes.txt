@@ -1,0 +1,7 @@
+Colour Temperature (CCT)
+Beam Angle
+Wattage
+Output (lm)
+Diameter
+Dimming type
+Trim Finish
