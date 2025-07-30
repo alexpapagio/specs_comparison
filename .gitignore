@@ -4,8 +4,8 @@ __pycache__/
 .cache/
 .env
 cache/
-/data/alternative/
-/data/original/
+data/alternative/
+data/original/
 
 
 *.txt
