@@ -1,0 +1,11 @@
+__pycache__/
+.cache/
+*.pyc
+.cache/
+.env
+cache/
+/data/alternative/
+/data/original/
+
+
+*.txt

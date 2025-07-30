@@ -1,0 +1,14 @@
+WING TONG LIMITED
+Lighting Specification Sheet
+Code Ref Manufacturer Camlite
+Description 14W LED adjustable recessed down light, c/w14W LED 2700-6000K
+CRI95 25D, and remote DALI tunable white driver
+Model No. WT-LED-RH14W Supplier Wing Tong Limited
+Dimensions As shown Contact Person Alex Ho 97815950
+alexho@wingtong.com
+Lift time 50000hrs Lumen output 1000lm (fixture)
+Color White Color Temp. 2700-6000K CRI>95
+Lamp 14W LED module Beam Angle 8/25/36 degree
+IP 20 Accessories honey comb
+Component DALI LED driver Origin China
+WING TONG LIMITED Tel: 2789 0965 Fax: 2789 0936
