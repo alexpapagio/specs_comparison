@@ -5,6 +5,8 @@ This tool compares lighting specification sheets using PDF extraction, attribute
 ## Features
 - Extract text from original/proposed lighting spec PDFs
 - Use regex + LLM to extract attributes
+*Please note that original specs have a standard structure for each company
+so will need to adjust regex accordingly
 - Compare attributes with customizable logic
 - Annotate differences on the proposed spec PDF
 
