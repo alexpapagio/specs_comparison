@@ -20,7 +20,7 @@ def extract_text_blocks(pdf_path):
     return "\n\n".join(all_pages_text)
 
 if __name__ == "__main__":
-    text = extract_text_blocks("data/alternative/D105.pdf")
+    text = extract_text_blocks("data/alternative/D104.pdf")
 
-    with open("cache/alternative_text/D105_mu.txt", "w", encoding="utf-8") as f:
+    with open("cache/alternative_text/D104_mu.txt", "w", encoding="utf-8") as f:
         f.write(text)
