@@ -7,13 +7,13 @@ def parse_numeric(val):
         return None
 
 def extract_all_angles(text):
-    #print(f"Extracting angles from: {text}")
+    print(f"Extracting angles from: {text}")
     return [float(n) for n in re.findall(r"\d{1,3}(?:\.\d+)?", text)]
 
 def compare_beam_angles(original, proposed):
     orig_angle = parse_numeric(original)
     proposed_angles = extract_all_angles(proposed)
-    #print(f"Original angle: {orig_angle}, Proposed angles: {proposed_angles}")
+    print(f"Original angle: {orig_angle}, Proposed angles: {proposed_angles}")
 
     if not orig_angle or not proposed_angles:
         return "Missing"
@@ -89,7 +89,7 @@ def compare_specs(original, proposed):
             key_lower = key.lower()
 
             if "beam" in key_lower:
-                #print(f"Comparing beam angles: {o_val} vs {p_val}")
+                print(f"Comparing beam angles: {o_val} vs {p_val}")
                 severity = compare_beam_angles(o_val, p_val)
 
             elif "watt" in key_lower:

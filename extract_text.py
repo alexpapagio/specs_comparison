@@ -1,4 +1,4 @@
-
+import os
 import pdfplumber
 
 def extract_text_from_pdf(path):
@@ -10,18 +10,22 @@ def extract_text_from_pdf(path):
                 full_text += text + "\n"
         return full_text
 
-# Change these paths if needed
-original_path = "data/D104 - spec.pdf"
-proposed_path = "data/D104 - alt.pdf"
+def process_folder(pdf_folder, cache_folder):
+    os.makedirs(cache_folder, exist_ok=True)
+    for filename in os.listdir(pdf_folder):
+        if filename.lower().endswith(".pdf"):
+            base = os.path.splitext(filename)[0]
+            pdf_path = os.path.join(pdf_folder, filename)
+            txt_path = os.path.join(cache_folder, base + ".txt")
 
-original_text = extract_text_from_pdf(original_path)
-proposed_text = extract_text_from_pdf(proposed_path)
+            if not os.path.exists(txt_path):
+                print(f"🔍 Extracting text from {filename}")
+                text = extract_text_from_pdf(pdf_path)
+                with open(txt_path, "w", encoding="utf-8") as f:
+                    f.write(text)
+            else:
+                print(f"✅ Skipping {filename}, already cached.")
 
-# Save text output for reference
-with open("data/original_text.txt", "w") as f:
-    f.write(original_text)
-
-with open("data/proposed_text.txt", "w") as f:
-    f.write(proposed_text)
-
-print("✅ Text extracted and saved to .txt files!")
+if __name__ == "__main__":
+    process_folder("data/original", "cache/original_text")
+    process_folder("data/alternative", "cache/alternative_text")
