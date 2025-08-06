@@ -1,31 +1,26 @@
-import os
-import pdfplumber
+import fitz  # PyMuPDF
 
-def extract_text_from_pdf(path):
-    with pdfplumber.open(path) as pdf:
-        full_text = ""
-        for page in pdf.pages:
-            text = page.extract_text()
+def extract_text_blocks(pdf_path):
+    doc = fitz.open(pdf_path)
+    all_pages_text = []
+
+    for page_num, page in enumerate(doc):
+        blocks = page.get_text("blocks")  # returns list of (x0, y0, x1, y1, "text", block_no, block_type)
+        blocks = sorted(blocks, key=lambda b: (round(b[1]), b[0]))  # sort top-to-bottom, then left-to-right
+
+        text_lines = []
+        for block in blocks:
+            text = block[4].strip()
             if text:
-                full_text += text + "\n"
-        return full_text
+                text_lines.append(text)
 
-def process_folder(pdf_folder, cache_folder):
-    os.makedirs(cache_folder, exist_ok=True)
-    for filename in os.listdir(pdf_folder):
-        if filename.lower().endswith(".pdf"):
-            base = os.path.splitext(filename)[0]
-            pdf_path = os.path.join(pdf_folder, filename)
-            txt_path = os.path.join(cache_folder, base + ".txt")
+        page_text = "\n".join(text_lines)
+        all_pages_text.append(page_text)
 
-            if not os.path.exists(txt_path):
-                print(f"🔍 Extracting text from {filename}")
-                text = extract_text_from_pdf(pdf_path)
-                with open(txt_path, "w", encoding="utf-8") as f:
-                    f.write(text)
-            else:
-                print(f"✅ Skipping {filename}, already cached.")
+    return "\n\n".join(all_pages_text)
 
 if __name__ == "__main__":
-    process_folder("data/original", "cache/original_text")
-    process_folder("data/alternative", "cache/alternative_text")
+    text = extract_text_blocks("data/alternative/D105.pdf")
+
+    with open("cache/alternative_text/D105_mu.txt", "w", encoding="utf-8") as f:
+        f.write(text)
