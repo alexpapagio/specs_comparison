@@ -3,7 +3,7 @@ import torch
 import re
 import json
 
-# Model setup
+# Load LLM
 model_id = "microsoft/phi-3-mini-128k-instruct"
 
 bnb_config = BitsAndBytesConfig(
@@ -18,37 +18,48 @@ model = AutoModelForCausalLM.from_pretrained(
     model_id,
     device_map="auto",
     quantization_config=bnb_config
-    )
+)
 
 pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
-def extract_semantic_attributes(spec_text):
-    prompt = f"""
-You are a smart assistant. Read the lighting specification text below and extract the following attributes.
+# Improved prompt
+PROMPT_TEMPLATE = """
+You are a lighting specification parser.
 
-Return only a JSON object with these fields:
+Below is a technical spec document for a light fixture. Your task is to extract these fields and return them as JSON:
 - Colour Temperature (CCT)
 - Beam Angle
 - Wattage
 - Output (lm)
 - Diameter
-- Dimming Type (Dali, 0-10V, Phase, DMX, Mains Dimming, TBC etc.)
+- Dimming Type (e.g., Dali, 0-10V, Phase, DMX, Mains Dimming, TBC)
 - Trim Finish
 
-Text:
-\"\"\"{spec_text}\"\"\"
+Only respond with the JSON, and make your best guess based on available data (including options or diagrams). Ignore unrelated information.
+
+Spec Document:
+\"\"\"
+{spec_text}
+\"\"\"
 """
 
-    output = pipe(prompt, max_new_tokens=512, do_sample=False )[0]['generated_text']
+def extract_semantic_attributes(spec_text):
+    # Truncate or chunk if too long
+    max_len = 3500  # Approx ~1000 tokens
+    if len(spec_text) > max_len:
+        spec_text = spec_text[:max_len]
 
+    prompt = PROMPT_TEMPLATE.format(spec_text=spec_text)
+
+    print("🧠 Extracting attributes from cleaned full text...")
     try:
+        output = pipe(prompt, max_new_tokens=512, do_sample=False)[0]['generated_text']
         json_text = re.search(r"\{.*\}", output, re.DOTALL).group()
         result = json.loads(json_text)
-        print("✅ Extracted Semantic Attributes:")
+        print("✅ Extracted Attributes:")
         for k, v in result.items():
-            print(f"{k}: {v}")
+            print(f"  {k}: {v}")
         return result
     except Exception as e:
-        print("⚠️ Could not parse JSON output:")
-        print(output)
+        print(f"❌ Failed to extract attributes: {e}")
         return {}
